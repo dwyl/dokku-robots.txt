@@ -1,0 +1,6 @@
+$PLUGIN_COMMAND_PREFIX = robots.txt
+
+case "$1" in
+  $PLUGIN_COMMAND_PREFIX:disallow-all)
+    ""
+    
