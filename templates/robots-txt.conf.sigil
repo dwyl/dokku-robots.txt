@@ -1,0 +1,3 @@
+location /robots.txt {
+    alias {{ .DOKKU_ROOT }}/{{ .APP }}/robots.txt;
+}

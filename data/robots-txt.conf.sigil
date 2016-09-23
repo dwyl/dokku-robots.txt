@@ -1,3 +1,0 @@
-location /robots.txt {
-    alias /home/dokku/mysite/robots.txt;
-}
