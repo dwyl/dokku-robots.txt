@@ -1,19 +1,12 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
-source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
-source "$PLUGIN_AVAILABLE_PATH/nginx-vhosts/functions"
+source "$PLUGIN_AVAILABLE_PATH/robots.txt/functions"
 
-robots_txt_build_config() {
-  local ROBOTS_TXT_NGINX_BUILD_CONFIG_TMP_WORK_DIR=$(mktemp -d /tmp/dokku_robots_txt_nginx_template.XXXXX)
-  local ROBOTS_TXT_NGINX_CONF=$(mktemp --tmpdir="${NGINX_BUILD_CONFIG_TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
-
-  # Create Nginx conf
-  dokku_log_info1 "Creating robots.txt Nginx conf"
-  sigil "${SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT_NGINX_CONF"
-  mv "$ROBOTS_TXT_NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
-
-  if (is_deployed "$APP"); then
-    dokku_log_verbose "Reloading nginx"
-    validate_nginx && restart_nginx
-  else
+robots_txt_disallow() {
+  declare desc="discourage web crawlers from indexing this app"
+  local cmd="$1"
+  [[ -z $2 ]] && echo "Please specify an app to run the command on" && exit 1
+  robots_txt_build_config "/"
 }
+
+robots_txt_disallow "$@"
