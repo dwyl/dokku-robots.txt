@@ -11,11 +11,14 @@ robots_txt_build_config() {
   local NGINX_CONF=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
   local ROBOTS_TXT=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots.txt.XXXXXX")
 
+  # Setup
+  mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
+  chown dokku:dokku "$DOKKU_ROOT/$APP/nginx.conf.d/"
+
   # Create Nginx conf
   local NGINX_SIGIL_PARAMS=(-f $NGINX_TEMPLATE APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
   dokku_log_info1 "Creating robots.txt Nginx conf"
   sigil "${NGINX_SIGIL_PARAMS[@]}" | cat -s > "$NGINX_CONF"
-  mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
   cp "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
 
   # Create robots.txt
