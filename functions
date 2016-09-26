@@ -13,6 +13,7 @@ robots_txt_build_config() {
   local NGINX_SIGIL_PARAMS=(-f $ROBOTS_TXT_NGINX_CONF APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
   dokku_log_info1 "Creating robots.txt Nginx conf"
   sigil "${SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT_NGINX_CONF"
+  mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
   mv "$ROBOTS_TXT_NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
 
   # Create robots.txt
