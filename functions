@@ -17,15 +17,19 @@ robots_txt_build_config() {
   sigil "${NGINX_SIGIL_PARAMS[@]}" | cat -s > "$NGINX_CONF"
   mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
   mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
+  chmod +r "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
 
   # Create robots.txt
   local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT_TEMPLATE APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$2")
   dokku_log_info1 "Creating robots.txt"
   sigil "${ROBOTS_TXT_SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
   mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/robots.txt"
+  chmod +r "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/robots.txt"
 
   if (is_deployed "$APP"); then
     dokku_log_verbose "Reloading nginx"
     validate_nginx && restart_nginx
   fi
+
+  dokku_log_info1 "Finished"
 }
