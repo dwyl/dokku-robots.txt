@@ -16,16 +16,19 @@ sudo dokku plugin:install https://notabug.org/candlewaster/dokku-robots.txt.git 
 ## commands
 
 ```
-robots.txt:allow <app>      Allows web crawlers to an application
-robots.txt:disallow <app>   Disallows web crawlers to an application
+robots.txt:allow <app>,    Discourages web crawlers from indexing this app
+robots.txt:disallow <app>, Doesn't discourage web crawlers from indexing this app
 ```
 
 ## usage
 
 ```shell
-# Disallow web crawlers to myapp
+# Discourage web crawlers from indexing myapp
 dokku robots.txt:disallow myapp
 
-# Allow web crawlers to myapp
+# Don't discourage web crawlers from indexing myapp
 dokku robots.txt:allow myapp
+
+# View robots.txt for myapp
+dokku robots.txt myapp
 ```
