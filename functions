@@ -4,6 +4,7 @@ source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
 source "$PLUGIN_AVAILABLE_PATH/nginx-vhosts/functions"
 
 robots_txt_build_config() {
+  local APP="$1"; verify_app_name "$APP"
   local TMP_WORK_DIR=$(mktemp -d /tmp/dokku_robots.txt.XXXXX)
   local NGINX_CONF=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
   local ROBOTS_TXT=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots.txt.XXXXXX")
@@ -16,7 +17,7 @@ robots_txt_build_config() {
   mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
 
   # Create robots.txt
-  local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$1")
+  local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$2")
   dokku_log_info1 "Creating robots.txt"
   sigil "${ROBOTS_TXT_SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
   mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/"

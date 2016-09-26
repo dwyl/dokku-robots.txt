@@ -6,7 +6,7 @@ robots_txt_disallow() {
   declare desc="don't discourage web crawlers from indexing this app"
   local cmd="$1"
   [[ -z $2 ]] && echo "Please specify an app to run the command on" && exit 1
-  robots_txt_build_config ""
+  robots_txt_build_config $2 ""
 }
 
 robots_txt_disallow "$@"
