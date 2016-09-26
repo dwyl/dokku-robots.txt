@@ -12,8 +12,8 @@ robots_txt_build_config() {
   local ROBOTS_TXT=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots.txt.XXXXXX")
 
   # Set permissions
-  chmod +rw NGINX_CONF
-  chmod +rw ROBOTS_TXT
+  chmod +rw $NGINX_CONF
+  chmod +rw $ROBOTS_TXT
 
   # Create Nginx conf
   local NGINX_SIGIL_PARAMS=(-f $NGINX_TEMPLATE APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
