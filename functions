@@ -11,20 +11,22 @@ robots_txt_build_config() {
   local NGINX_CONF=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
   local ROBOTS_TXT=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots.txt.XXXXXX")
 
+  # Set permissions
+  chmod +rw NGINX_CONF
+  chmod +rw ROBOTS_TXT
+
   # Create Nginx conf
   local NGINX_SIGIL_PARAMS=(-f $NGINX_TEMPLATE APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
   dokku_log_info1 "Creating robots.txt Nginx conf"
   sigil "${NGINX_SIGIL_PARAMS[@]}" | cat -s > "$NGINX_CONF"
   mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
   mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
-  chmod +r "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
 
   # Create robots.txt
   local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT_TEMPLATE APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$2")
   dokku_log_info1 "Creating robots.txt"
   sigil "${ROBOTS_TXT_SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
   mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/robots.txt"
-  chmod +r "$DOKKU_ROOT/$APP/robots.txt"
 
   if (is_deployed "$APP"); then
     dokku_log_verbose "Reloading nginx"
