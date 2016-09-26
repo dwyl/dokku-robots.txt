@@ -4,22 +4,21 @@ source "$PLUGIN_CORE_AVAILABLE_PATH/common/functions"
 source "$PLUGIN_AVAILABLE_PATH/nginx-vhosts/functions"
 
 robots_txt_build_config() {
-  local ROBOTS_TXT_NGINX_BUILD_CONFIG_TMP_WORK_DIR=$(mktemp -d /tmp/dokku_robots_txt_nginx_template.XXXXX)
-  local ROBOTS_TXT_NGINX_CONF=$(mktemp --tmpdir="${ROBOTS_TXT_NGINX_BUILD_CONFIG_TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
-  local ROBOTS_TXT_BUILD_CONFIG_TMP_WORK_DIR=$(mktemp -d /tmp/dokku_robots_txt_template.XXXXX)
-  local ROBOTS_TXT=$(mktemp --tmpdir="${ROBOTS_TXT_BUILD_CONFIG_TMP_WORK_DIR}" "robots.txt.XXXXXX")
+  local TMP_WORK_DIR=$(mktemp -d /tmp/dokku_robots.txt.XXXXX)
+  local NGINX_CONF=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots-txt.conf.XXXXXX")
+  local ROBOTS_TXT=$(mktemp --tmpdir="${TMP_WORK_DIR}" "robots.txt.XXXXXX")
 
   # Create Nginx conf
-  local NGINX_SIGIL_PARAMS=(-f $ROBOTS_TXT_NGINX_CONF APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
+  local NGINX_SIGIL_PARAMS=(-f $NGINX_CONF APP="$APP" DOKKU_ROOT="$DOKKU_ROOT")
   dokku_log_info1 "Creating robots.txt Nginx conf"
-  sigil "${SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT_NGINX_CONF"
+  sigil "${NGINX_SIGIL_PARAMS[@]}" | cat -s > "$NGINX_CONF"
   mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
-  mv "$ROBOTS_TXT_NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
+  mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
 
   # Create robots.txt
   local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$1")
   dokku_log_info1 "Creating robots.txt"
-  sigil "${SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
+  sigil "${ROBOTS_TXT_SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
   mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/"
 
   if (is_deployed "$APP"); then
