@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 set -eo pipefail; [[ $DOKKU_TRACE ]] && set -x
 
-$PLUGIN_COMMAND_PREFIX = robots.txt
-
 case "$1" in
   help | robots.txt:help)
     help_content_func () {
