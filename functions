@@ -14,13 +14,13 @@ robots_txt_build_config() {
   dokku_log_info1 "Creating robots.txt Nginx conf"
   sigil "${NGINX_SIGIL_PARAMS[@]}" | cat -s > "$NGINX_CONF"
   mkdir -p "$DOKKU_ROOT/$APP/nginx.conf.d/"
-  mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/"
+  mv "$NGINX_CONF" "$DOKKU_ROOT/$APP/nginx.conf.d/robots-txt.conf"
 
   # Create robots.txt
   local ROBOTS_TXT_SIGIL_PARAMS=(-f $ROBOTS_TXT APP="$APP" DOKKU_ROOT="$DOKKU_ROOT" ROBOTS_TXT_DISALLOW="$2")
   dokku_log_info1 "Creating robots.txt"
   sigil "${ROBOTS_TXT_SIGIL_PARAMS[@]}" | cat -s > "$ROBOTS_TXT"
-  mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/"
+  mv "$ROBOTS_TXT" "$DOKKU_ROOT/$APP/robots.txt"
 
   if (is_deployed "$APP"); then
     dokku_log_verbose "Reloading nginx"
