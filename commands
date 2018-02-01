@@ -6,8 +6,8 @@ case "$1" in
     help_content_func () {
       declare desc="return robots.txt plugin help content"
       cat<<help_content
-    robots.txt:allow <app>, Discourages web crawlers from indexing this app
-    robots.txt:disallow <app>, Doesn't discourage web crawlers from indexing this app
+    robots.txt:disallow <app>, Discourages web crawlers from indexing this app
+    robots.txt:allow <app>, Doesn't discourage web crawlers from indexing this app
 help_content
   }
 
